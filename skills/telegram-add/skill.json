@@ -23,7 +23,14 @@
     }
   },
   "outputs": {
-    "status": "success | error",
-    "message": "Rezultāta apraksts."
+    "status": {
+      "type": "string",
+      "enum": ["success", "error"],
+      "description": "Rezultāta statuss."
+    },
+    "message": {
+      "type": "string",
+      "description": "Rezultāta apraksts."
+    }
   }
 }
