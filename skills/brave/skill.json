@@ -1,0 +1,27 @@
+{
+  "name": "brave-search",
+  "version": "1.0.0",
+  "description": "Perform web searches using the Brave Search API.",
+  "inputs": {
+    "query": {
+      "type": "string",
+      "description": "The search query string.",
+      "required": true
+    },
+    "count": {
+      "type": "integer",
+      "description": "Number of results to return (1-20).",
+      "default": 10
+    }
+  },
+  "outputs": {
+    "results": {
+      "type": "array",
+      "description": "List of search results (title, url, description)."
+    },
+    "error": {
+      "type": "string",
+      "description": "Error message if search failed."
+    }
+  }
+}

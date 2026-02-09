@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "description": "Example configuration for OpenClaw with OpenAI TTS skill enabled."
+  },
+  "skills": {
+    "entries": {
+      "openai-tts": {
+        "apiKey": "YOUR_OPENAI_API_KEY_HERE",
+        "model": "tts-1",
+        "voice": "alloy"
+      },
+      "openai-whisper-api": {
+        "apiKey": "YOUR_OPENAI_API_KEY_HERE"
+      }
+    }
+  }
+}

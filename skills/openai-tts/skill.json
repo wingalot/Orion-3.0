@@ -1,0 +1,39 @@
+{
+  "name": "openai-tts",
+  "version": "1.0.0",
+  "description": "Generate speech from text via OpenAI Audio Speech API.",
+  "inputs": {
+    "text": {
+      "type": "string",
+      "description": "The text to convert to speech.",
+      "required": true
+    },
+    "voice": {
+      "type": "string",
+      "enum": ["alloy", "echo", "fable", "onyx", "nova", "shimmer"],
+      "description": "Voice ID to use for synthesis.",
+      "default": "alloy"
+    },
+    "model": {
+      "type": "string",
+      "enum": ["tts-1", "tts-1-hd"],
+      "description": "TTS model variant.",
+      "default": "tts-1"
+    },
+    "out": {
+      "type": "string",
+      "description": "Output file path (e.g. /tmp/audio.mp3).",
+      "required": false
+    }
+  },
+  "outputs": {
+    "file": {
+      "type": "string",
+      "description": "Path to the generated audio file."
+    },
+    "error": {
+      "type": "string",
+      "description": "Error message if generation failed."
+    }
+  }
+}
