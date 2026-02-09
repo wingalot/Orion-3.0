@@ -1,0 +1,40 @@
+{
+  "name": "telegram-send-message",
+  "version": "1.0.0",
+  "description": "Nosūta ziņu uz norādīto Telegram kanālu.",
+  "inputs": {
+    "channel_id": {
+      "type": "string",
+      "pattern": "^-?[0-9]+$",
+      "description": "Kanāla ID (vai lietotāja ID).",
+      "required": true
+    },
+    "message": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Ziņas teksts.",
+      "required": true
+    },
+    "parse_mode": {
+      "type": "string",
+      "enum": ["Markdown", "HTML", "None"],
+      "description": "Formatēšanas režīms (noklusējums: HTML).",
+      "required": false
+    }
+  },
+  "outputs": {
+    "status": {
+      "type": "string",
+      "enum": ["success", "error"],
+      "description": "Darbības rezultāts."
+    },
+    "message_id": {
+      "type": "integer",
+      "description": "Nosūtītās ziņas unikālais ID."
+    },
+    "error": {
+      "type": "string",
+      "description": "Kļūdas apraksts (ja status=error)."
+    }
+  }
+}

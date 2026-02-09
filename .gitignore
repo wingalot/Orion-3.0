@@ -1,0 +1,3 @@
+config/*.json
+!config/channels.json
+!config/telegram.example.json
