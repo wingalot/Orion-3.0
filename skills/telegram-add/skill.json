@@ -1,0 +1,29 @@
+{
+  "name": "telegram-add-channel",
+  "version": "1.0.0",
+  "description": "Pievieno vai atjaunina Telegram kanālu konfigurācijā ar validāciju.",
+  "inputs": {
+    "channel_id": {
+      "type": "string",
+      "pattern": "^-?[0-9]+$",
+      "description": "Unikāls Telegram kanāla ID (piem., -100123456789).",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "minLength": 3,
+      "description": "Lasāms kanāla nosaukums.",
+      "required": true
+    },
+    "invite_link": {
+      "type": "string",
+      "pattern": "^https://t\\.me/.*$",
+      "description": "Publiska vai privāta ielūguma saite.",
+      "required": false
+    }
+  },
+  "outputs": {
+    "status": "success | error",
+    "message": "Rezultāta apraksts."
+  }
+}
