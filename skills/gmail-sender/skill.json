@@ -1,0 +1,40 @@
+{
+  "name": "gmail-sender",
+  "version": "1.0.0",
+  "description": "Send emails and manage contacts via Gmail API.",
+  "inputs": {
+    "to": {
+      "type": "string",
+      "description": "Recipient email address.",
+      "required": true
+    },
+    "subject": {
+      "type": "string",
+      "description": "Email subject.",
+      "required": true
+    },
+    "message": {
+      "type": "string",
+      "description": "Email body content.",
+      "required": true
+    },
+    "query": {
+      "type": "string",
+      "description": "Search query for contacts (name or email)."
+    }
+  },
+  "outputs": {
+    "status": {
+      "type": "string",
+      "description": "Success or failure status."
+    },
+    "id": {
+      "type": "string",
+      "description": "Sent message ID."
+    },
+    "contacts": {
+      "type": "array",
+      "description": "List of found contacts."
+    }
+  }
+}
