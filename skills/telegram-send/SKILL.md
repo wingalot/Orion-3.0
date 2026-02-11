@@ -5,7 +5,7 @@ Nosūta teksta ziņojumu uz norādīto Telegram kanālu vai lietotāju.
 Izmanto `config/telegram.json` konfigurāciju, lai iegūtu `bot_token`.
 
 ## Ievades parametri
-1. `channel_id` (Obligāts): Skaitlisks ID (piem., `395239117` vai `-100...`).
+1. `channel_id` (Obligāts): Skaitlisks ID (piem., `123456789` vai `-100...`).
 2. `message` (Obligāts): Teksts, kas jānosūta.
 3. `parse_mode` (Neobligāts): Formatēšanas stils (`HTML`, `Markdown`, `None`). Pēc noklusējuma `HTML`.
 

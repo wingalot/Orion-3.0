@@ -12,7 +12,7 @@ if (!query) {
 }
 
 // Read API Key from config if not hardcoded (or check env)
-const API_KEY = process.env.BRAVE_API_KEY || "BSA05ihIMkD4Na1zjew3q7MqLswohKs"; 
+const API_KEY = process.env.BRAVE_API_KEY; 
 
 async function main() {
   try {
