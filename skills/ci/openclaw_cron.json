@@ -1,0 +1,2 @@
+ID                                   Name                     Schedule                         Next       Last       Status    Target    Agent     
+89ec42c0-0cec-4da5-8cdf-c22a053e4f5a Backup Email Sender      cron 30 0 * * *                  in 14h     -          idle      main      main
