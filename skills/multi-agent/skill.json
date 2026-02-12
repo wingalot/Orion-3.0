@@ -1,0 +1,16 @@
+{
+  "name": "multi-agent",
+  "description": "Orchestrates multi-agent tasks using OpenClaw sessions_spawn and sessions_send.",
+  "version": "1.0.0",
+  "commands": {
+    "spawn": {
+      "run": "node skills/multi-agent/spawn.js",
+      "description": "Spawn a sub-agent for a task",
+      "params": {
+        "task": { "type": "string", "required": true },
+        "model": { "type": "string" },
+        "label": { "type": "string" }
+      }
+    }
+  }
+}
