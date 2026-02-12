@@ -1,0 +1,11 @@
+{
+  "name": "github-workflow",
+  "version": "1.0.0",
+  "description": "Standard operating procedures and checks for GitHub interactions.",
+  "commands": {
+    "status": {
+      "run": "git status",
+      "description": "Check current repository status"
+    }
+  }
+}
