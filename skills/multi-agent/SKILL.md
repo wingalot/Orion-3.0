@@ -1,21 +1,13 @@
 # SKILL.md - Multi-Agent Coordinator
 
 ## Apraksts
-Šis skills nodrošina rīkus un piemērus darbam ar OpenClaw multi-aģentu arhitektūru. Tas ļauj vieglāk pārvaldīt, spawn-ot un komunicēt ar citiem aģentiem, izmantojot `sessions_spawn` un `sessions_send` rīkus, balstoties uz OpenClaw dokumentācijas principiem.
+Šis skills demonstrē OpenClaw multi-aģentu arhitektūru. Tā nav parasta "prasme", bet gan konfigurācijas un rīku kopums, kas ļauj aģentiem sadarboties.
 
-## Iespējas
-- **Spawn Sub-Agent:** Izveido jaunu izolētu sesiju specifiskam uzdevumam.
-- **Inter-Agent Communication:** Sūta ziņas starp aģentiem (ja konfigurēts).
+## Funkcionalitāte
+- **Spawn Sub-Agent:** Izveido jaunu sesiju specifiskam uzdevumam.
+- **Message Routing:** Sūta ziņas starp aģentiem (ja konfigurēts `openclaw.json`).
 
 ## Lietošana
-Šis skills ir "wrapper" ap OpenClaw iebūvētajiem rīkiem, lai standartizētu multi-aģentu uzdevumu deleģēšanu.
+Lai izmantotu šo funkcionalitāti, pārliecinieties, ka `openclaw.json` ir definēti aģenti un `sessions_spawn` rīks ir atļauts.
 
-### Piemērs (Spawn)
-```javascript
-// Izmanto sessions_spawn rīku tieši, vai caur wrapper skriptu (ja tādu izveidosim)
-```
-
-## Konfigurācija
-Lai pilnvērtīgi izmantotu multi-aģentu iespējas, `openclaw.json` failā jābūt definētiem aģentiem vai jāizmanto `sessions_spawn` (sub-aģentiem).
-
-Skatīt: https://docs.openclaw.ai/concepts/multi-agent
+Skatiet: https://docs.openclaw.ai/concepts/multi-agent
