@@ -1,4 +1,0 @@
-@reboot /home/elvis/.openclaw/workspace/scripts/boot_notify.sh >> /home/elvis/.openclaw/workspace/scripts/boot.log 2>&1
-0 23 * * 0 /home/elvis/.openclaw/workspace/scripts/backup.sh >> /home/elvis/backup.log 2>&1
-@reboot /home/elvis/start_kiosk.sh
-*/5 * * * * /home/elvis/.openclaw/workspace/skills/ci/run_ci.sh >> /home/elvis/.openclaw/workspace/skills/ci/cron.log 2>&1
