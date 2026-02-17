@@ -1,0 +1,30 @@
+{
+  "name": "raspberry-pi-power",
+  "version": "1.0.0",
+  "description": "Raspberry Pi vadība (izslēgšana, restartēšana)",
+  "author": "Oreo",
+  "license": "MIT",
+  "commands": {
+    "power-off": {
+      "description": "Izslēgt Raspberry Pi",
+      "script": "scripts/shutdown.sh",
+      "args": [],
+      "confirm": true,
+      "warning": "⚠️ Šī darbība izslēgs Raspberry Pi! Oreo nebūs pieejams, kamēr ierīce netiks manuāli ieslēgta."
+    },
+    "reboot": {
+      "description": "Restartēt Raspberry Pi",
+      "script": "scripts/reboot.sh",
+      "args": [],
+      "confirm": true,
+      "warning": "⚠️ Šī darbība restartēs Raspberry Pi! Oreo nebūs pieejams 30-60 sekundes."
+    }
+  },
+  "requirements": [
+    "sudo tiesības bez paroles komandām: shutdown, poweroff, reboot"
+  ],
+  "platforms": [
+    "linux",
+    "raspberry-pi"
+  ]
+}
