@@ -5,7 +5,7 @@ const args = process.argv.slice(2);
 const dirArgIndex = args.indexOf('--dir');
 const keepArgIndex = args.indexOf('--keep');
 
-const BACKUP_DIR = dirArgIndex !== -1 ? args[dirArgIndex + 1] : '/home/elvis/backups';
+const BACKUP_DIR = dirArgIndex !== -1 ? args[dirArgIndex + 1] : '/home/oreo/backups';
 const KEEP_COUNT = keepArgIndex !== -1 ? parseInt(args[keepArgIndex + 1], 10) : 10;
 
 if (!fs.existsSync(BACKUP_DIR)) {
@@ -23,7 +23,7 @@ const files = fs.readdirSync(BACKUP_DIR)
       time: fs.statSync(filePath).mtime.getTime()
     };
   })
-  .filter(f => f.name.includes('backup') && (f.name.endsWith('.tar.gz') || f.name.endsWith('.zip'))); // Filtrējam tikai backup failus
+  .filter(f => f.name.endsWith('.tar.gz') || f.name.endsWith('.zip')); // Filtrējam backup failus
 
 // Kārtojam pēc laika (jaunākie vispirms)
 files.sort((a, b) => b.time - a.time);

@@ -11,7 +11,7 @@ function fail(message) {
   process.exit(1);
 }
 
-const workspace = '/home/elvis/.openclaw/workspace';
+const workspace = '/home/oreo/.openclaw/workspace';
 
 // 1. Validate Brave Search Skill
 log("Validating Brave Search Skill...");
