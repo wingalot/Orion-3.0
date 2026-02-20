@@ -40,12 +40,21 @@ function authorize(credentials, callback) {
   });
 }
 
+function encodeRFC2047(str) {
+  // Encode non-ASCII text for email headers using RFC 2047 standard
+  const needsEncoding = /[^\x00-\x7F]/.test(str);
+  if (!needsEncoding) return str;
+  
+  const base64 = Buffer.from(str, 'utf-8').toString('base64');
+  return `=?UTF-8?B?${base64}?=`;
+}
+
 function sendEmail(auth) {
   const gmail = google.gmail({version: 'v1', auth});
   
   const str = [
     `To: ${to}`,
-    `Subject: ${subject}`,
+    `Subject: ${encodeRFC2047(subject)}`,
     'Content-Type: text/plain; charset=utf-8',
     'MIME-Version: 1.0',
     '',
