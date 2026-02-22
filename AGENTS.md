@@ -207,6 +207,39 @@ Think of it like a human reviewing their journal and updating their mental model
 
 The goal: Be helpful without being annoying. Check in a few times a day, do useful background work, but respect quiet time.
 
+## 🛡️ Crash Prevention (NEIZNĪCINĀMA SISTĒMA)
+
+**JAUNS:** Sistēma tagad ir crash-proof un self-healing.
+
+### Safe Executor Pattern
+```javascript
+const { safeExec, safeKill } = require('./orion-skills/scripts/safe-executor');
+
+// Vienmēr lieto safeExec nevis tiešu exec
+const result = await safeExec("komanda", { timeout: 30 });
+if (!result.success) {
+  // Apķīlā kļūdu, bet turpina darbu!
+  await notifyTelegram(`❌ Kļūda: ${result.error}`);
+  return { ok: false };
+}
+```
+
+### Droša Procesu Nobeigšana
+```bash
+# ✅ DROŠI
+pkill -15 -x felix_auto_executor || true
+
+# ❌ BĪSTAMI
+pkill -9 -f felix_auto_executor
+```
+
+### Watchdog & Heartbeat
+- **Watchdog:** `orion-skills/scripts/watchdog.js` - neiznīcināmais cikls
+- **Heartbeat:** Cron job ik pa 60 sekundēm (`🟢 Agent alive`)
+- **Recovery:** Ja kļūda → `⚠️ Recovered from crash` + 5s pauze + turpinām
+
+Vairāk info: `CRASH_PREVENTION.md`
+
 ## Make It Yours
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.

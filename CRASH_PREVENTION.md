@@ -1,92 +1,189 @@
-# ⚠️ Zināmie "uzkāršanās" riski un risinājumi
+# ⚠️ CRASH PREVENTION - Neiznīcināma Sistēma
 
-## 🔴 Augsta riska operācijas (bija problēmas)
+## 🎯 Galvenie principi
 
-### 1. Git/SSH komandas bez timeout
-**Problēma:** `git pull/push` var gaidīt input vai tīklu uz bezgalību  
-**Risinājums:** Vienmēr lietot `timeout` parametru
+1. **NEKAD** neizmet izņēmumus uz augšu - vienmēr apķīlā
+2. **NEKAD** neatstāj `exec` bez `timeout`
+3. **NEKAD** nelieto `pkill -9 -f` (SIGKILL + full match)
+4. **Vienmēr** turpini darbu pēc kļūdas
+5. **Vienmēr** ziņo par problēmām
+
+---
+
+## 🔒 Safe Executor Pattern
+
+### ❌ NEDRĪKST (būs katastrofa)
 ```javascript
-// ❌ Nedroši
-exec({ command: "git pull..." })
-
-// ✅ Droši
-exec({ command: "git pull...", timeout: 30 })
+// Slikti - kļūda iznīcina visu sesiju
+const result = exec({ command: "git push" });
+if (result.error) throw result.error;  // 💥
 ```
 
-### 2. Garas exec komandas
-**Problēma:** Komandas, kas aizņem >60 sekundēm var izraisīt timeout  
-**Risinājums:**
-- Lietot `background: true` ilgstošām operācijām
-- Vai sadalīt mazākos gabaliņos
+### ✅ JĀ (droši)
+```javascript
+// Labi - kļūda apķīlāta, turpinām darbu
+const { safeExec, safeKill } = require('./orion-skills/scripts/safe-executor');
 
-## 🟡 Vidēja riska operācijas
+async function doWork() {
+  const result = await safeExec("git push", { timeout: 30 });
+  
+  if (!result.success) {
+    console.log('❌ Neizdevās:', result.error);
+    // Ziņojam, bet turpinām!
+    await notifyTelegram(`Kļūda: ${result.error}`);
+    return { ok: false };
+  }
+  
+  return { ok: true, output: result.output };
+}
+```
 
-### 3. Sub-aģentu gaidīšana
-**Problēma:** `sessions_spawn` + `subagents list` polling var aizņemt ilgu laiku  
-**Risinājums:**
-- Neveikt polling loop (nav jāpārbauda katras 10 sekundes)
-- Izmantot `runTimeoutSeconds` sub-aģentiem
-- Paļauties uz push-based completion
+---
 
-### 4. Atmiņas ierobežojumi
-**Pašreizējais stāvoklis:**
-- RAM: 3.7GB (1.2GB lietots, OK)
-- Diska vieta: 29GB (11GB lietots, 17GB brīvi, OK)
-- Swap: 2GB (neizmantots, OK)
+## 🛡️ Watchdog Loop - Neiznīcināms
 
-**Risinājums:** Sekot līdzi `/tmp` un `~/.openclaw/logs` izmēram
-
-### 5. API limits
-**Problēma:** Kimi API var atgriezt rate limit kļūdas  
-**Risinājums:**
-- Nekādā gadījumā nestrādāt ar >150k tokeniem vienā sesijā
-- Izmantot `compaction.mode = "safeguard"` (jau iestatīts)
-
-## 🟢 Zema riska operācijas
-
-### 6. Gateway restarts
-**Problēma:** `openclaw gateway restart` pārtrauc visus procesus  
-**Risinājums:**
-- Neizpildīt gateway restart kamēr ir aktīvi sub-aģenti
-- Pārbaudīt `openclaw status` pirms restarta
-
-### 7. Canvas komandas bez node
-**Problēma:** `canvas snapshot` kļūdājas, ja nav aktīva node  
-**Risinājums:** Vienmēr pārbaudīt `nodes status` pirms canvas lietošanas
-
-## 📋 Pārbaudes saraksts (ja iestrēgstu)
-
-1. **Pārbaudīt timeout:** Vai komandai bija `timeout` parametrs?
-2. **Pārbaudīt tīklu:** `curl -m 5 https://api.github.com`
-3. **Pārbaudīt resursus:** `df -h && free -h`
-4. **Pārbaudīt gateway:** `openclaw status`
-5. **Pārbaudīt sub-aģentus:** `subagents list`
-
-## 🛠️ Iestatījumi, kas palīdz izvairīties no problēmām
-
-### ~/.openclaw/openclaw.json
-```json
-{
-  "agents": {
-    "defaults": {
-      "maxConcurrent": 4,
-      "subagents": {
-        "maxConcurrent": 8
-      },
-      "compaction": {
-        "mode": "safeguard"
-      }
+```javascript
+async function immortalLoop() {
+  while (true) {
+    try {
+      await doWork();
+      await heartbeat();
+    } catch (error) {
+      // Kļūda APĶĪLĀTA - nekad neapstājamies!
+      console.error('💥 Crash:', error.message);
+      await sendTelegram(`⚠️ Recovered from crash: ${error.message}`);
+      await sleep(5000); // 5 sekunžu pauze
     }
   }
 }
 ```
 
-## 🚨 Ko darīt, ja iestrēgstu
+---
 
-1. **Nosūtīt `/new`** - izveidot jaunu sesiju
-2. **Nosūtīt `/reset`** - atiestatīt esošo sesiju  
-3. **Pagaidīt 30 sekundes** - varbūt komanda tikai ir lēna
-4. **Pārbaudīt** vai nav kāda fona procesa: `process(action="list")`
+## 🔪 Droša Procesu Nobeigšana
+
+### ❌ BĪSTAMI (var nogalināt OpenClaw)
+```bash
+# NEDRĪKST - SIGKILL var novest pie sistēmas nestabilitātes
+pkill -9 -f felix_auto_executor
+
+# NEDRĪKST - -f var atrast nepareizus procesus
+pkill -f "python.*felix"
+```
+
+### ✅ DROŠI
+```bash
+# 1. SIGTERM (polite) + exact match
+pkill -15 -x felix_auto_executor || true
+
+# 2. Ja vēl dzīvs, SIGTERM ar full match
+pkill -15 -f "felix_auto_executor" || true
+
+# 3. Tikai ja nekas cits nepalīdz, SIGKILL
+pkill -9 -x felix_auto_executor || true
+```
+
+### Skripta variants
+```bash
+# Izmanto gatavo skriptu
+./orion-skills/scripts/safe-process-kill.sh felix_auto_executor
+```
 
 ---
-*Atjaunots: 2026-02-17*
+
+## ⏱️ Heartbeat Sistēma
+
+### Cron job (aktīvs)
+```json
+{
+  "name": "orion-heartbeat",
+  "schedule": { "kind": "every", "everyMs": 60000 },
+  "payload": { "kind": "systemEvent", "text": "🟢 Agent alive" }
+}
+```
+
+ID: `8d3923d8-01da-4bb9-9363-4fdd6987d453`
+
+---
+
+## 📋 Kļūdu Apstrādes Šablons
+
+```javascript
+const { safeExec, notifyTelegram } = require('./orion-skills/scripts/safe-executor');
+
+async function robustOperation() {
+  // 1. Paziņojam par sākumu (nav obligāti, bet noderīgi)
+  console.log('🚀 Sāku operāciju...');
+  
+  // 2. Izpildām ar safeExec
+  const result = await safeExec("komanda", { timeout: 30 });
+  
+  // 3. Pārbaudām rezultātu
+  if (!result.success) {
+    // 4. Ziņojam par kļūdu
+    await notifyTelegram(`❌ Kļūda: ${result.error}`, { severity: 'error' });
+    
+    // 5. Atgriežam kļūdas objektu, NEIZMETAM izņēmumu!
+    return { 
+      ok: false, 
+      error: result.error,
+      exitCode: result.exitCode 
+    };
+  }
+  
+  // 6. Veiksmīgi!
+  return { ok: true, output: result.output };
+}
+```
+
+---
+
+## 🚨 Ko darīt pie dažādām kļūdām
+
+| Kļūda | Iemesls | Risinājums |
+|-------|---------|------------|
+| SIGTERM | Cits process nogalināja | Pārbaudi `safeKill` izsaukumus |
+| timeout | Komanda pārāk ilga | Palielini `timeout` vai lieto `background: true` |
+| ECONNREFUSED | Tīkla/API problēma | Gaidi 5s un mēģini vēlreiz |
+| ENOSPC | Disks pilns | Pārbaudi `df -h` |
+| OOM | Atmiņas trūkums | Samazini `maxBuffer` |
+
+---
+
+## 🔧 Failu Struktūra
+
+```
+orion-skills/scripts/
+├── safe-executor.js      # Galvenā kļūdu apstrādes bibliotēka
+├── watchdog.js           # Neiznīcināmais cikls
+└── safe-process-kill.sh  # Droša procesu nobeigšana
+```
+
+---
+
+## 🧪 Testēšana
+
+```bash
+# 1. Testē safe executor
+node -e "const {safeExec} = require('./orion-skills/scripts/safe-executor'); safeExec('ls -la').then(r => console.log(r.success))"
+
+# 2. Testē process kill
+./orion-skills/scripts/safe-process-kill.sh not_existing_process
+
+# 3. Pārbaudi heartbeat
+cron list
+```
+
+---
+
+## 📚 Saistītā informācija
+
+- **MEMORY.md** - Lietotāja preferences un vēsture
+- **AGENTS.md** - Darba režīma noteikumi
+- **SKILL.md** skills - Konkrētās prasmes
+
+---
+
+*Atjaunots: 2025-01-23*  
+*Sistēma: crash-proof, self-healing, immortal*  
+*Heartbeat: 8d3923d8-01da-4bb9-9363-4fdd6987d453*

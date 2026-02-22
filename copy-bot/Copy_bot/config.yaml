@@ -1,0 +1,240 @@
+# Copy Bot Configuration
+# Forex/Gold Trading Strategy Parameters
+
+# Risk Management
+risk_management:
+  risk_per_trade: 0.01  # 1% of account per trade
+  max_daily_risk: 0.03   # 3% max daily risk
+  default_sl_pips: 80
+  tight_sl_pips: 60
+  manual_cut_pips: 20
+
+# Take Profit Structure
+tp_structure:
+  tp1:
+    min_pips: 15
+    max_pips: 30
+    typical: 20
+  tp2:
+    min_pips: 30
+    max_pips: 80
+    typical: 50
+  tp3:
+    min_pips: 100
+    max_pips: 180
+    typical: 120
+
+# Market Condition Settings
+market_conditions:
+  trending:
+    win_rate_expected: 0.75
+    sl_multiplier: 1.0      # Full SL (-80)
+    tp3_probability: 0.75   # High chance of hitting TP3
+    hold_for_tp3: true
+  mixed:
+    win_rate_expected: 0.40
+    sl_multiplier: 0.875    # Reduced SL (-70)
+    tp3_probability: 0.40   # Moderate chance
+    hold_for_tp3: conditional  # Only if momentum strong
+  choppy:
+    win_rate_expected: 0.15
+    sl_multiplier: 0.75     # Tight SL (-60)
+    tp3_probability: 0.15   # Low chance
+    hold_for_tp3: false     # Take TP1/TP2 only
+
+# Key Levels Database
+# These are pre-calculated S/R levels that repeat across days
+key_levels:
+  USDJPY:
+    - level: 156.025
+      direction: Sell
+      confidence: 1.0
+      note: "Major resistance - 3/3 wins, +195 pips"
+      type: resistance
+    - level: 154.950
+      direction: Buy
+      confidence: 0.8
+      note: "Support after breakout"
+      type: support
+  
+  EURUSD:
+    - level: 1.15980
+      direction: Buy
+      confidence: 1.0
+      note: "Major support - 2/2 wins"
+      type: support
+    - level: 1.17215
+      direction: Buy
+      confidence: 0.8
+      note: "Secondary support"
+      type: support
+    - level: 1.17550
+      direction: Sell
+      confidence: 0.6
+      note: "Resistance for flips"
+      type: resistance
+  
+  XAUUSD:
+    - level: 4247
+      direction: Buy
+      confidence: 0.9
+      note: "Breakout level"
+      type: breakout
+    - level: 4192
+      direction: Buy
+      confidence: 0.7
+      note: "Deep support"
+      type: support
+    - level: 4200
+      direction: Sell
+      confidence: 0.6
+      note: "Flip zone lower"
+      type: flip_zone
+    - level: 4221
+      direction: Sell
+      confidence: 0.6
+      note: "Flip zone upper"
+      type: flip_zone
+    - level: 4323
+      direction: Buy
+      confidence: 0.9
+      note: "Trend continuation"
+      type: momentum
+    - level: 4405
+      direction: Buy
+      confidence: 0.8
+      note: "Trend extension"
+      type: momentum
+  
+  EURAUD:
+    - level: 1.7745
+      direction: Sell
+      confidence: 1.0
+      note: "6-day hold, +268 pips"
+      type: swing
+    - level: 1.7747
+      direction: Sell
+      confidence: 1.0
+      note: "6-day hold zone"
+      type: swing
+    - level: 1.76875
+      direction: Buy
+      confidence: 0.2
+      note: "Failed level - avoid"
+      type: failed
+  
+  AUDCAD:
+    - level: 0.91620
+      direction: Buy
+      confidence: 1.0
+      note: "2-day hold, TP3 hit"
+      type: swing
+  
+  GBPNZD:
+    - level: 2.29990
+      direction: Buy
+      confidence: 1.0
+      note: "1-day hold, TP3 +112"
+      type: swing
+  
+  GBPJPY:
+    - level: 205.840
+      direction: Buy
+      confidence: 0.8
+      note: "Support level"
+      type: support
+  
+  EURCAD:
+    - level: 1.60765
+      direction: Buy
+      confidence: 0.8
+      note: "Multi-day support"
+      type: support
+  
+  USDCHF:
+    - level: 0.80815
+      direction: Sell
+      confidence: 1.0
+      note: "Resistance, TP3 +95"
+      type: resistance
+    - level: 0.79460
+      direction: Sell
+      confidence: 0.8
+      note: "Multi-day resistance"
+      type: resistance
+
+# Pair-specific settings
+pairs:
+  XAUUSD:
+    spread_pips: 2.0
+    pip_value: 10.0  # $ per pip for 1 lot
+    session_best: ["london", "ny_overlap"]
+    volatility: high
+  
+  EURUSD:
+    spread_pips: 0.5
+    pip_value: 10.0
+    session_best: ["london", "ny_overlap"]
+    volatility: medium
+  
+  USDJPY:
+    spread_pips: 0.6
+    pip_value: 6.5
+    session_best: ["tokyo", "london"]
+    volatility: medium
+  
+  GBPJPY:
+    spread_pips: 1.2
+    pip_value: 6.5
+    session_best: ["london"]
+    volatility: high
+  
+  EURAUD:
+    spread_pips: 1.5
+    pip_value: 6.5
+    session_best: ["london", "asia"]
+    volatility: high
+
+# Entry tolerances (how close to key level is acceptable)
+entry_tolerances:
+  XAUUSD: 5.0       # 5 pips for gold
+  JPY_pairs: 0.05   # 5 pips for JPY pairs
+  standard: 0.0005  # 5 pips for standard pairs
+
+# Flip zone settings
+flip_zones:
+  XAUUSD:
+    level: 4210
+    tolerance: 15
+    note: "Major flip zone"
+  EURUSD:
+    level: 1.16500
+    tolerance: 0.0020
+    note: "Key decision level"
+  USDJPY:
+    level: 156.000
+    tolerance: 0.05
+    note: "Psychological level"
+
+# Strategy weights for ensemble
+strategy_weights:
+  key_levels: 0.30
+  gold_mean_reversion: 0.20
+  adaptive_flip: 0.15
+  trend_following: 0.20
+  multi_day_hold: 0.15
+
+# Backtest settings
+backtest:
+  start_date: "2025-12-01"
+  end_date: "2026-02-10"
+  initial_balance: 10000
+  currency: "USD"
+  
+# Performance targets
+targets:
+  min_win_rate: 0.65
+  target_win_rate: 0.77  # Felix achieved 77%
+  min_profit_factor: 1.5
+  target_profit_factor: 2.0
+  max_drawdown: 0.10  # 10% max drawdown

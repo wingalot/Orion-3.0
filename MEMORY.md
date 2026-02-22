@@ -195,6 +195,21 @@ export OPENAI_API_KEY="..."
 node send.js --to "epasts@example.com" --subject "Virsraksts" --message "Teksts"
 ```
 
+### 🔗 SSH Piekļuve Raspberry Pi (Elvis)
+
+**Adrese:** `192.168.1.145`  
+**SSH Alias:** `elvis`  
+**Auth:** Key-based (bez paroles)  
+**Piekļuve:** `ssh elvis`  
+
+**Kas tur ir:**
+- Raspberry Pi ar OpenClaw gateway (port 18789)
+- VNC serveris (port 5900)
+- Tailscale
+- Trading dashboard (felix_dashboard.py)
+
+**Nav lokāla LLM API** — pašlaik tikai OpenClaw gateway, kas savienojas ar ārējo API.
+
 ---
 *Atjaunots: 2026-02-20*
 *Nākamā pārbaude: Kad lietotājs atgādinās*

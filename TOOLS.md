@@ -37,4 +37,8 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
 
 ---
 
+### LLM Endpoints
+
+- kimi-local → 192.168.1.145, key-based auth, bez lietotāja/paroles
+
 Add whatever helps you do your job. This is your cheat sheet.
