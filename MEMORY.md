@@ -104,22 +104,52 @@ git commit -m "ziņa"
 git push origin master
 ```
 
-### Balss ziņas (TTS) - 2026-02-20
+### Balss ziņas (TTS) - 2026-02-28
+
+#### ⚠️ SVARĪGI - TTS rīku atšķirības
+
+**1. OpenClaw iebūvētais `tts` rīks:**
+- ❌ **NEATBALSTA** `voice` parametru
+- ❌ Izmanto cieti kodētu noklusējumu (nav `echo`)
+- ✅ Ērts īsām ziņām
+
+**2. `speak.sh` skripts (ieteicams):**
+- ✅ Pilna kontrole pār balsi
+- ✅ Noklusējumā `echo` (ja `OPENAI_TTS_VOICE=echo` .env)
+- ✅ Var pārrakstīt ar `--voice`
 
 #### ✅ Ieteicamie iestatījumi balss ziņām
-- **Balss:** `onyx` (dziļa vīriešu) - Elvis izvēlējās
+- **Balss:** `echo` (vīriešu, silta) - **Noklusējums no 2026-02-28**
 - **Ātrums:** `0.9` (nedaudz lēnāks, saprotamāks)
 - **Alternatīvas balsis:**
-  - `echo` - vīriešu, silta
+  - `onyx` - vīriešu, dziļa autoritatīva
   - `fable` - britu akcents
   - `nova` - sieviešu, draudzīga
 
-#### 🛠️ Piemērs - pilna komanda balss ziņai
+#### 🔑 API Key (AUTO-LOAD)
+- **Atrašanās vieta:** `/home/oreo/.openclaw/workspace/orion-skills/skills/openai-tts/.env`
+- **Skripts auto-lādē no .env** - vairs NAV jāexportē manuāli!
+- **Pārbaudīts:** 2026-02-28 - strādā bez `export`
+
+#### 🛠️ Pareizais veids balss ziņu sūtīšanai
+
+```javascript
+// ❌ SLIKTI - tts neatbalsta voice parametru
+tts({ text: "Sveiki!", channel: "telegram" })  // Nav echo balss!
+
+// ✅ LABI - izmantot speak.sh + message
+const result = exec({
+  command: './scripts/speak.sh "Sveiki, Elvis!" --out /tmp/msg.mp3',
+  timeout: 30
+});
+message({ asVoice: true, filePath: "/tmp/msg.mp3", target: "395239117" });
+```
+
+**Pilna komanda:**
 ```bash
-export OPENAI_API_KEY="sk-proj-ERlI-..."
 /home/oreo/.openclaw/workspace/orion-skills/skills/openai-tts/scripts/speak.sh \
   "Sveiki, Elvis! Šeit Oreo." \
-  --voice onyx \
+  --voice echo \
   --speed 0.9 \
   --out /tmp/message.mp3
 ```
