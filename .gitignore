@@ -1,3 +1,5 @@
 config/*.json
 !config/channels.json
 !config/telegram.example.json
+orion-instructions/home/elvis/Desktop/API_KEYS.txt
+orion-instructions/home/elvis/Desktop/API_KEYS.txt
