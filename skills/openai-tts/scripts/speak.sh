@@ -21,7 +21,6 @@ fi
 text="${1:-}"
 shift || true
 
-voice="alloy"
 model="tts-1"
 format="mp3"
 speed="1.0"
@@ -56,10 +55,24 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+# Auto-load API key and voice from .env if not already set
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "$SCRIPT_DIR/../.env" ]]; then
+  if [[ "${OPENAI_API_KEY:-}" == "" ]]; then
+    export $(grep -E '^OPENAI_API_KEY=' "$SCRIPT_DIR/../.env" | xargs)
+  fi
+  if [[ "${OPENAI_TTS_VOICE:-}" == "" ]]; then
+    export $(grep -E '^OPENAI_TTS_VOICE=' "$SCRIPT_DIR/../.env" | xargs)
+  fi
+fi
+
 if [[ "${OPENAI_API_KEY:-}" == "" ]]; then
   echo "Missing OPENAI_API_KEY" >&2
   exit 1
 fi
+
+# Use env variable or default to echo
+voice="${OPENAI_TTS_VOICE:-echo}"
 
 # Build JSON payload
 json=$(cat <<EOF
