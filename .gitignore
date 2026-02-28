@@ -1,5 +1,12 @@
+# Config files with sensitive data
 config/*.json
 !config/channels.json
 !config/telegram.example.json
-orion-instructions/home/elvis/Desktop/API_KEYS.txt
+
+# Environment files (API keys, passwords)
+.env
+.env.local
+.env.*.local
+
+# Other sensitive files
 orion-instructions/home/elvis/Desktop/API_KEYS.txt
